@@ -7,6 +7,9 @@ on:
 jobs:
   build:
 
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
@@ -23,7 +26,13 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Deploy to Github Pages
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          publish_dir: ./build
+          # Upload entire repository
+          path: './build'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
